@@ -1,0 +1,116 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0",
+    "title": "Registration",
+    "contact": {}
+  },
+  "host": "localhost:2000",
+  "basePath": "/api/registration",
+  "securityDefinitions": {},
+  "schemes": ["http", "https"],
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
+  "paths": {
+    "/signUp": {
+      "post": {
+        "summary": "SignUp",
+        "tags": ["user"],
+        "operationId": "signup",
+        "deprecated": false,
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "Body",
+            "in": "body",
+            "required": true,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/SignUpRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        }
+      }
+    },
+    "/signIn": {
+      "post": {
+        "summary": "SignIn",
+        "tags": ["user"],
+        "operationId": "signin",
+        "deprecated": false,
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "Body",
+            "in": "body",
+            "required": true,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/SignInRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "SignUpRequest": {
+      "title": "SignUpRequest",
+      "example": {
+        "firstName": "",
+        "lastName": "",
+        "email": "",
+        "username": "",
+        "password": ""
+      },
+      "type": "object",
+      "properties": {
+        "firstName": {
+          "type": "string"
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "username": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      },
+      "required": ["firstName", "lastName", "email", "username", "password"]
+    },
+    "SignInRequest": {
+      "title": "SignInRequest",
+      "example": {
+        "email": "",
+        "password": ""
+      },
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      },
+      "required": ["email", "password"]
+    }
+  }
+}

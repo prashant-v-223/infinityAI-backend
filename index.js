@@ -305,112 +305,67 @@ const getUserIncomeMultiplier = (rank) => {
 };
 schedule.scheduleJob(every24hours1, async () => {
   try {
-    const result12 = await Usermodal.aggregate([
-      {
-        $match: {
-          Rank: { $ne: "DIRECT" },
-          mystack: { $ne: 0 },
-        },
-      },
-      {
-        $graphLookup: {
-          from: "users",
-          startWith: "$username",
-          connectFromField: "username",
-          connectToField: "refferalBy",
-          as: "refers_to",
-        },
-      },
-      {
-        $lookup: {
-          from: "stakings",
-          localField: "refers_to._id",
-          foreignField: "userId",
-          as: "stackingdata",
-        },
-      },
-      {
-        $unwind: "$stackingdata",
-      },
-      {
-        $match: {
-          "stackingdata.amount": { $ne: [] },
-          "stackingdata.at": { $ne: [] },
-          "stackingdata.Active": true,
-        },
-      },
-      {
-        $group: {
-          _id: {
-            userId: "$_id",
-            Rank: "$Rank",
-            Level: "$stackingdata.Level",
+    let data12 = await Usermodal.find({
+      mystack: { $ne: 0 },
+      Rank: { $ne: "DIRECT" },
+    })
+    for (let index = 0; index < data12.length; index++) {
+      const element = await data12[index];
+      const result12 = await Usermodal.aggregate([
+        {
+          $match: {
+            username: element.username,
           },
-          username: { $first: "$username" },
-          stackingdata: { $push: "$stackingdata" },
         },
-      },
-      {
-        $sort: {
-          "_id.Rank": 1,
-          "_id.Level": 1,
-        },
-      },
-      {
-        $group: {
-          _id: {
-            Rank: "$_id.Rank",
+        {
+          $graphLookup: {
+            from: "users",
+            startWith: "$username",
+            connectFromField: "username",
+            connectToField: "refferalBy",
+            as: "refers_to",
+            restrictSearchWithMatch: {
+              Rank: { $ne: element.Rank },
+            },
           },
-          users: { $push: "$$ROOT" },
         },
-      },
-      {
-        $project: {
-          _id: 0,
-          Rank: "$_id.Rank",
-          Level: "$_id.Level",
-          users: {
-            $map: {
-              input: "$users",
-              as: "user",
-              in: {
-                username: "$$user.username",
-                stackingdata: "$$user.stackingdata",
+        {
+          $lookup: {
+            from: "stakings",
+            localField: "refers_to._id",
+            foreignField: "userId",
+            as: "stackingdata",
+          },
+        },
+        {
+          $match: {
+            "stackingdata.amount": { $ne: [] },
+            "stackingdata.at": { $ne: [] },
+          },
+        },
+        {
+          $project: {
+            refers_to: 1,
+            stackingdata: {
+              $filter: {
+                input: "$stackingdata",
+                as: "d",
+                cond: {
+                  $gte: ["$$d.Active", true],
+                },
               },
             },
+            result: "$Rank",
+            username: 1,
+            Rank: 1,
+            level: 1,
           },
         },
-      },
-    ]);
-    if (result12.length > 0) {
-      for (const result of result12) {
+      ]);
+      if (result12.length > 0) {
+        let result = await result12[0]
         const dd = getUserIncomeMultiplier(result.Rank);
-        for (let index = 0; index < result.users; index++) {
-          const element = array[index];
-        let finalresult = await Usermodal.aggregate([
-          {
-            $match: {
-              username: element.username,
-            },
-          },
-          {
-            $lookup: {
-              from: "users",
-              localField: "username",
-              foreignField: "refferalBy",
-              as: "finalresult",
-              pipeline: [
-                {
-                  $match: {
-                    Rank: result12.Rank,
-                  },
-                },
-              ],
-            },
-          },
-        ])
-        if(finalresult.finalresult.length === 0){
-        for (const d of element.stackingdata) {
+        for (const d of result.stackingdata) {
           const incomeAmount = (d.DailyReword * dd) / 100;
           if (d.Active === true) {
             const Refflevalncome = await findOneRecord(Usermodal, {
@@ -443,11 +398,9 @@ schedule.scheduleJob(every24hours1, async () => {
             await Passive(data).save();
           }
         }
-        }
-        }
-
       }
     }
+
   } catch (error) {
     console.log(error);
   }

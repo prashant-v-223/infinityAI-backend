@@ -307,7 +307,6 @@ schedule.scheduleJob(every24hours1, async () => {
   try {
     let data12 = await Usermodal.find({
       mystack: { $ne: 0 },
-      username: "IAT33493",
       Rank: { $ne: "DIRECT" },
     })
     for (let index = 0; index < data12.length; index++) {

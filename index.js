@@ -307,10 +307,47 @@ schedule.scheduleJob(every24hours1, async () => {
   try {
     let data12 = await Usermodal.find({
       mystack: { $ne: 0 },
+      username: "IAT33493",
       Rank: { $ne: "DIRECT" },
     })
     for (let index = 0; index < data12.length; index++) {
       const element = await data12[index];
+
+      // Assuming element.Rank is the rank you want to find
+      const rankToFind = element.Rank;
+
+      const rankArray = [
+        { Rank: "COMMUNITY ⭐" },
+        { Rank: "COMMUNITY ⭐⭐" },
+        { Rank: "COMMUNITY ⭐⭐⭐" },
+        { Rank: "COMMUNITY ⭐⭐⭐⭐" },
+        { Rank: "COMMUNITY ⭐⭐⭐⭐⭐" },
+        { Rank: "COMMUNITY ⭐⭐⭐⭐⭐" },
+        { Rank: "COMMUNITY ⭐B" },
+        { Rank: "COMMUNITY ⭐A" },
+        { Rank: "COMMUNITY ⭐TRUST" },
+      ];
+
+      let foundIndex = -1;
+
+      for (let i = 0; i < rankArray.length; i++) {
+        if (rankArray[i].Rank === rankToFind) {
+          foundIndex = i;
+          break;
+        }
+      }
+
+      if (foundIndex !== -1) {
+        // Move the object at foundIndex to the end
+        const movedObject = rankArray.splice(foundIndex, 1)[0];
+        rankArray.push(movedObject);
+      }
+
+      // Add condition to exclude the object with Rank equal to element.Rank
+      const filteredArray = rankArray.filter(obj => obj.Rank !== element.Rank);
+
+      console.log("Filtered Array:", element, filteredArray);
+
       const result12 = await Usermodal.aggregate([
         {
           $match: {
@@ -325,7 +362,16 @@ schedule.scheduleJob(every24hours1, async () => {
             connectToField: "refferalBy",
             as: "refers_to",
             restrictSearchWithMatch: {
-              Rank: { $ne: element.Rank },
+              $and: [
+                { Rank: { $ne: element.Rank } },
+                {
+                  $nor: filteredArray.map(rankCondition => ({
+                    $and: [
+                      { Rank: rankCondition.Rank },
+                    ]
+                  }))
+                }
+              ]
             },
           },
         },

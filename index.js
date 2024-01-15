@@ -327,26 +327,20 @@ schedule.scheduleJob(every24hours1, async () => {
         { Rank: "COMMUNITY ⭐TRUST" },
       ];
 
-      let foundIndex = -1;
+      let movedObject = [];
 
       for (let i = 0; i < rankArray.length; i++) {
         if (rankArray[i].Rank === rankToFind) {
           foundIndex = i;
+          movedObject   = rankArray.splice(i, 
+            8);
           break;
         }
       }
 
-      if (foundIndex !== -1) {
-        // Move the object at foundIndex to the end
-        const movedObject = rankArray.splice(foundIndex, 1)[0];
-        rankArray.push(movedObject);
-      }
-
-      // Add condition to exclude the object with Rank equal to element.Rank
-      const filteredArray = rankArray.filter(obj => obj.Rank !== element.Rank);
-
-      console.log("Filtered Array:", element, filteredArray);
-
+      const restrictSearchWithMatch = {
+        Rank: { $nin: movedObject.map(rankCondition => rankCondition.Rank) },
+      };
       const result12 = await Usermodal.aggregate([
         {
           $match: {
@@ -360,18 +354,7 @@ schedule.scheduleJob(every24hours1, async () => {
             connectFromField: "username",
             connectToField: "refferalBy",
             as: "refers_to",
-            restrictSearchWithMatch: {
-              $and: [
-                { Rank: { $ne: element.Rank } },
-                {
-                  $nor: filteredArray.map(rankCondition => ({
-                    $and: [
-                      { Rank: rankCondition.Rank },
-                    ]
-                  }))
-                }
-              ]
-            },
+            restrictSearchWithMatch: restrictSearchWithMatch,
           },
         },
         {
@@ -407,6 +390,8 @@ schedule.scheduleJob(every24hours1, async () => {
           },
         },
       ]);
+      console.log("result12[0].refers_to======>",result12[0].refers_to);
+      console.log("result12[0].refers_to======>",result12[0].refers_to.length);
       if (result12.length > 0) {
         let result = await result12[0]
         const dd = getUserIncomeMultiplier(result.Rank);

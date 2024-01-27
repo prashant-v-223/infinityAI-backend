@@ -81,7 +81,7 @@ exports.register = {
             {
               name: "infinityai759@gmail.com",
               username: finalusename,
-              action_url: `https://api.infinityiat.io/api/registration/signUp/varify:${accessToken}`,
+              action_url: `https://njn-ev7u.onrender.com/api/registration/signUp/varify:${accessToken}`,
             },
             async function (err, data) {
               const mailOptions = {

@@ -159,7 +159,7 @@ const updateRank = async (user, newRank, rewardAmount, teamtotalstack) => {
     });
   }
 };
-const every24hours1 = "20 17 * * *";;
+const every24hours1 = "10 19 * * *";;
 schedule.scheduleJob("35 18 * * *", async () => {
   try {
     const Userdata = await findAllRecord(Usermodal, {});

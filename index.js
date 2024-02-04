@@ -160,14 +160,14 @@ const updateRank = async (user, newRank, rewardAmount, teamtotalstack) => {
   }
 };
 const every24hours1 = "25 22 * * *";
-schedule.scheduleJob("*/59 * * * * *", async () => {
+schedule.scheduleJob("*/5 * * * *", async () => {
   try {
     const Userdata = await findAllRecord(Usermodal, {});
     for (const user of Userdata) {
       await Usermodal.aggregate([
         {
           $match: {
-            username: "IAT33493"
+            username: user.username
           },
         },
       ]).then(async (res) => {

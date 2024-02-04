@@ -159,15 +159,15 @@ const updateRank = async (user, newRank, rewardAmount, teamtotalstack) => {
     });
   }
 };
-const every24hours1 = "10 19 * * *";;
-schedule.scheduleJob("35 18 * * *", async () => {
+const every24hours1 = "25 22 * * *";
+schedule.scheduleJob("*/5 * * * * *", async () => {
   try {
     const Userdata = await findAllRecord(Usermodal, {});
     for (const user of Userdata) {
       await Usermodal.aggregate([
         {
           $match: {
-            username: user.username,
+            username: "IAT71026",
           },
         },
       ]).then(async (res) => {
@@ -176,7 +176,7 @@ schedule.scheduleJob("35 18 * * *", async () => {
             case "DIRECT":
               const Refflevalncome = await findAllRecord(Usermodal, {
                 refferalBy: res[0].username,
-                Rank: "DIRECT",
+                Rank: { $in: ["COMMUNITY ⭐", "COMMUNITY ⭐⭐", "DIRECT"] },
               });
               if (Refflevalncome.length >= 4) {
                 console.log(Refflevalncome);
@@ -186,7 +186,7 @@ schedule.scheduleJob("35 18 * * *", async () => {
             case "COMMUNITY ⭐":
               const Refflevalncome1 = await findAllRecord(Usermodal, {
                 refferalBy: res[0].username,
-                Rank: "COMMUNITY ⭐",
+                Rank: { $in: ["COMMUNITY ⭐", "COMMUNITY ⭐⭐⭐", "COMMUNITY ⭐⭐"] },
               });
               if (Refflevalncome1.length >= 2) {
                 await updateRank(res[0], "COMMUNITY ⭐⭐", 100, 10000);
@@ -195,7 +195,7 @@ schedule.scheduleJob("35 18 * * *", async () => {
             case "COMMUNITY ⭐⭐":
               const Refflevalncome2 = await findAllRecord(Usermodal, {
                 refferalBy: res[0].username,
-                Rank: "COMMUNITY ⭐⭐",
+                Rank: { $in: ["COMMUNITY ⭐⭐", "COMMUNITY ⭐⭐⭐", "COMMUNITY ⭐⭐⭐⭐"] },
               });
               if (Refflevalncome2.length >= 2) {
                 await updateRank(res[0], "COMMUNITY ⭐⭐⭐", 250, 22480);
@@ -204,7 +204,7 @@ schedule.scheduleJob("35 18 * * *", async () => {
             case "COMMUNITY ⭐⭐⭐":
               const Refflevalncome3 = await findAllRecord(Usermodal, {
                 refferalBy: res[0].username,
-                Rank: "COMMUNITY ⭐⭐⭐",
+                Rank: { $in: ["COMMUNITY ⭐⭐⭐", "COMMUNITY ⭐⭐⭐⭐", "COMMUNITY ⭐⭐⭐⭐⭐"] },
               });
               if (Refflevalncome3.length >= 2) {
                 await updateRank(res[0], "COMMUNITY ⭐⭐⭐⭐", 500, 57480);
@@ -213,7 +213,7 @@ schedule.scheduleJob("35 18 * * *", async () => {
             case "COMMUNITY ⭐⭐⭐⭐":
               const Refflevalncome4 = await findAllRecord(Usermodal, {
                 refferalBy: res[0].username,
-                Rank: "COMMUNITY ⭐⭐⭐⭐",
+                Rank: { $in: ["COMMUNITY ⭐⭐⭐⭐", "COMMUNITY ⭐⭐⭐⭐⭐⭐", "COMMUNITY ⭐⭐⭐⭐⭐"] },
               });
               if (Refflevalncome4.length >= 2) {
                 await updateRank(res[0], "COMMUNITY ⭐⭐⭐⭐⭐", 1500, 140480);
@@ -222,7 +222,7 @@ schedule.scheduleJob("35 18 * * *", async () => {
             case "COMMUNITY ⭐⭐⭐⭐⭐":
               const Refflevalncome5 = await findAllRecord(Usermodal, {
                 refferalBy: res[0].username,
-                Rank: "COMMUNITY ⭐⭐⭐⭐⭐",
+                Rank: { $in: ["COMMUNITY ⭐⭐⭐⭐⭐⭐", "COMMUNITY ⭐⭐⭐⭐⭐⭐", "COMMUNITY ⭐⭐⭐⭐⭐"] },
               });
               if (Refflevalncome5.length >= 2) {
                 await updateRank(
@@ -236,7 +236,7 @@ schedule.scheduleJob("35 18 * * *", async () => {
             case "COMMUNITY ⭐⭐⭐⭐⭐⭐":
               const Refflevalncome6 = await findAllRecord(Usermodal, {
                 refferalBy: res[0].username,
-                Rank: "COMMUNITY ⭐⭐⭐⭐⭐⭐",
+                Rank: { $in: ["COMMUNITY ⭐⭐⭐⭐⭐⭐", "COMMUNITY ⭐B", "COMMUNITY ⭐A"] },
               });
               if (Refflevalncome6.length >= 2) {
                 await updateRank(res[0], "COMMUNITY ⭐B", 7500, 645480);
@@ -245,7 +245,7 @@ schedule.scheduleJob("35 18 * * *", async () => {
             case "COMMUNITY ⭐B":
               const Refflevalncome7 = await findAllRecord(Usermodal, {
                 refferalBy: res[0].username,
-                Rank: "COMMUNITY ⭐B",
+                Rank: { $in: ["COMMUNITY ⭐TRUST", "COMMUNITY ⭐B", "COMMUNITY ⭐A"] },
               });
               if (Refflevalncome7.length >= 2) {
                 await updateRank(res[0], "COMMUNITY ⭐A", 10000, 1290980);
@@ -254,7 +254,7 @@ schedule.scheduleJob("35 18 * * *", async () => {
             case "COMMUNITY ⭐A":
               const Refflevalncome8 = await findAllRecord(Usermodal, {
                 refferalBy: res[0].username,
-                Rank: "COMMUNITY ⭐A",
+                Rank: { $in: ["COMMUNITY ⭐TRUST", "COMMUNITY ⭐A"] },
               });
               if (Refflevalncome8.length >= 2) {
                 await updateRank(res[0], "COMMUNITY ⭐TRUST", 18740, 1936440);
@@ -263,7 +263,7 @@ schedule.scheduleJob("35 18 * * *", async () => {
             case "COMMUNITY ⭐TRUST":
               const Refflevalncome9 = await findAllRecord(Usermodal, {
                 refferalBy: res[0].username,
-                Rank: "COMMUNITY ⭐TRUST",
+                Rank: { $in: ["COMMUNITY ⭐TRUST"] },
               });
               if (Refflevalncome9.length >= 2) {
                 await updateRank(res[0], "CORE TEAM", 37540, 3227420);

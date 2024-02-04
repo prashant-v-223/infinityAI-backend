@@ -160,18 +160,46 @@ const updateRank = async (user, newRank, rewardAmount, teamtotalstack) => {
   }
 };
 const every24hours1 = "25 22 * * *";
-schedule.scheduleJob("*/5 * * * * *", async () => {
+schedule.scheduleJob("*/59 * * * * *", async () => {
   try {
     const Userdata = await findAllRecord(Usermodal, {});
     for (const user of Userdata) {
       await Usermodal.aggregate([
         {
           $match: {
-            username: "IAT71026",
+            username: "IAT33493"
           },
         },
       ]).then(async (res) => {
         if (res.length > 0) {
+          // const rankArray = [
+          //   { Rank: "COMMUNITY ⭐" },
+          //   { Rank: "COMMUNITY ⭐⭐" },
+          //   { Rank: "COMMUNITY ⭐⭐⭐" },
+          //   { Rank: "COMMUNITY ⭐⭐⭐⭐" },
+          //   { Rank: "COMMUNITY ⭐⭐⭐⭐⭐" },
+          //   { Rank: "COMMUNITY ⭐⭐⭐⭐⭐" },
+          //   { Rank: "COMMUNITY ⭐B" },
+          //   { Rank: "COMMUNITY ⭐A" },
+          //   { Rank: "COMMUNITY ⭐TRUST" },
+          // ];
+
+          // let movedObject = [];
+
+          // for (let i = 0; i < rankArray.length; i++) {
+          //   if (rankArray[i].Rank === res[0].Rank) {
+          //     foundIndex = i;
+          //     movedObject = rankArray.splice(i + 1,
+          //       8);
+          //     break;
+          //   }
+          // }
+
+          // const restrictSearchWithMatch = {
+          //   Rank: { $nin: movedObject.map(rankCondition => rankCondition.Rank) },
+          // };
+          // console.log("restrictSearchWithMatch", restrictSearchWithMatch);
+          console.log("res[0]", res[0]);
           switch (res[0]?.Rank) {
             case "DIRECT":
               const Refflevalncome = await findAllRecord(Usermodal, {
@@ -332,7 +360,7 @@ schedule.scheduleJob(every24hours1, async () => {
       for (let i = 0; i < rankArray.length; i++) {
         if (rankArray[i].Rank === rankToFind) {
           foundIndex = i;
-          movedObject   = rankArray.splice(i, 
+          movedObject = rankArray.splice(i,
             8);
           break;
         }
@@ -390,8 +418,8 @@ schedule.scheduleJob(every24hours1, async () => {
           },
         },
       ]);
-      console.log("result12[0].refers_to======>",result12[0].refers_to);
-      console.log("result12[0].refers_to======>",result12[0].refers_to.length);
+      console.log("result12[0].refers_to======>", result12[0].refers_to);
+      console.log("result12[0].refers_to======>", result12[0].refers_to.length);
       if (result12.length > 0) {
         let result = await result12[0]
         const dd = getUserIncomeMultiplier(result.Rank);

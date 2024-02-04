@@ -100,123 +100,126 @@ const init1 = async (to_address, token_amount) => {
 };
 exports.Withdraw = {
   Withdrawotpsend: async (req, res) => {
-    try {
-      if (req.headers.authorization) {
-        let { err, decoded } = await tokenverify(
-          req.headers.authorization.split(" ")[1]
-        );
-        if (err) {
-          return notFoundResponse(res, {
-            message: "user not found",
-          });
-        }
-        if (decoded) {
-          decoded = await cloneDeep(decoded);
-          const data1 = await findOneRecord(Usermodal, {
-            email: decoded.profile["email"],
-            isActive: !false,
-            isValid: !false,
-          });
-          console.log(data1._id);
-          const otpdata = await findAllRecord(otp, {
-            userId: data1._id,
-          });
-          console.log(otpdata.length === 0);
-          if (otpdata.length === 0) {
-            var digits = "0123456789";
-            let OTP = "";
-            for (let i = 0; i < 4; i++) {
-              OTP += digits[Math.floor(Math.random() * 10)];
-            }
-            let data = {
-              otp: OTP,
-              userId: decoded.profile._id,
-            };
-            await otp(data).save();
-            const mailOptions = {
-              from: "infinityai759@gmail.com", // Sender address
-              to: decoded.profile["email"], // List of recipients
-              subject: "verification by Infinity.AI", // Subject line
-              html:
-                "<h2>" +
-                "withdrawal OTP for Infinity.AI" +
-                "</h2>" +
-                "<h4>" +
-                "OTP To Validate Your Infinity.AI withdrawal is: " +
-                "</h4>" +
-                "<br/>" +
-                `<h2  style="
-                    letter-spacing: 4px">` +
-                OTP +
-                "</h2>" +
-                "<h6>" +
-                "If You Have Not Send This OTP Request , Kindly Contact Support" +
-                "</h6>" +
-                "<h6>" +
-                "support@Infinity.AI.org" +
-                "</h6>" +
-                `<h6  style="display: flex">` +
-                ` <a style="
-                    padding: 3px"
-                  href="https://twitter.com/V4XCOIN"
-                  target="_blank"
-                  ><img
-                    alt="Twitter"
-                    height="32"
-                    src="https://firebasestorage.googleapis.com/v0/b/svdxv-xcv.appspot.com/o/twitter2x.png?alt=media&token=bd4e0369-e148-4243-8b8c-eb055093604d"
-                    style="
-                      display: block;
-                      height: auto;
-                      border: 0;
-                    "
-                    title="twitter"
-                    width="32"
-                /></a>` +
-                `  <a  style="
-                    padding: 3px"
-                  href="https://www.facebook.com/profile.php?id=100091423535722"
-                  target="_blank"
-                  ><img
-                    alt="Facebook"
-                    height="32"
-                    src="https://firebasestorage.googleapis.com/v0/b/svdxv-xcv.appspot.com/o/facebook2x.png?alt=media&token=c14dcec5-8af2-459f-8443-c7c3ac8b79d2"
-                    style="
-                      display: block;
-                      height: auto;
-                      border: 0;
-                    "
-                    title="facebook"
-                    width="32"
-                /></a>` +
-                "<h6>" +
-                "Visit Us At : www.Infinity.AI.org  " +
-                "</h6>",
-            };
-            transport.sendMail(mailOptions, async function (err, info) {
-              if (err) {
-                return badRequestResponse(res, {
-                  message: `Email not send error something is wrong ${err}`,
-                });
-              } else {
-                return successResponse(res, {
-                  message: "otp has been send to your email address..!!",
-                });
-              }
-            });
-          } else {
-            return successResponse(res, {
-              message: "otp already and in your mail plase check your email",
-            });
-          }
-        }
-      } else {
-        return badRequestResponse(res, {
-          message: "No token provided.",
-        });
-      }
-    } catch (error) {
-      return errorResponse(error, res);
-    }
+    return badRequestResponse(res, {
+      message: "Withdrawals halted temporarily for software update",
+    });
+    // try {
+    //   if (req.headers.authorization) {
+    //     let { err, decoded } = await tokenverify(
+    //       req.headers.authorization.split(" ")[1]
+    //     );
+    //     if (err) {
+    //       return notFoundResponse(res, {
+    //         message: "user not found",
+    //       });
+    //     }
+    //     if (decoded) {
+    //       decoded = await cloneDeep(decoded);
+    //       const data1 = await findOneRecord(Usermodal, {
+    //         email: decoded.profile["email"],
+    //         isActive: !false,
+    //         isValid: !false,
+    //       });
+    //       console.log(data1._id);
+    //       const otpdata = await findAllRecord(otp, {
+    //         userId: data1._id,
+    //       });
+    //       console.log(otpdata.length === 0);
+    //       if (otpdata.length === 0) {
+    //         var digits = "0123456789";
+    //         let OTP = "";
+    //         for (let i = 0; i < 4; i++) {
+    //           OTP += digits[Math.floor(Math.random() * 10)];
+    //         }
+    //         let data = {
+    //           otp: OTP,
+    //           userId: decoded.profile._id,
+    //         };
+    //         await otp(data).save();
+    //         const mailOptions = {
+    //           from: "infinityai759@gmail.com", // Sender address
+    //           to: decoded.profile["email"], // List of recipients
+    //           subject: "verification by Infinity.AI", // Subject line
+    //           html:
+    //             "<h2>" +
+    //             "withdrawal OTP for Infinity.AI" +
+    //             "</h2>" +
+    //             "<h4>" +
+    //             "OTP To Validate Your Infinity.AI withdrawal is: " +
+    //             "</h4>" +
+    //             "<br/>" +
+    //             `<h2  style="
+    //                 letter-spacing: 4px">` +
+    //             OTP +
+    //             "</h2>" +
+    //             "<h6>" +
+    //             "If You Have Not Send This OTP Request , Kindly Contact Support" +
+    //             "</h6>" +
+    //             "<h6>" +
+    //             "support@Infinity.AI.org" +
+    //             "</h6>" +
+    //             `<h6  style="display: flex">` +
+    //             ` <a style="
+    //                 padding: 3px"
+    //               href="https://twitter.com/V4XCOIN"
+    //               target="_blank"
+    //               ><img
+    //                 alt="Twitter"
+    //                 height="32"
+    //                 src="https://firebasestorage.googleapis.com/v0/b/svdxv-xcv.appspot.com/o/twitter2x.png?alt=media&token=bd4e0369-e148-4243-8b8c-eb055093604d"
+    //                 style="
+    //                   display: block;
+    //                   height: auto;
+    //                   border: 0;
+    //                 "
+    //                 title="twitter"
+    //                 width="32"
+    //             /></a>` +
+    //             `  <a  style="
+    //                 padding: 3px"
+    //               href="https://www.facebook.com/profile.php?id=100091423535722"
+    //               target="_blank"
+    //               ><img
+    //                 alt="Facebook"
+    //                 height="32"
+    //                 src="https://firebasestorage.googleapis.com/v0/b/svdxv-xcv.appspot.com/o/facebook2x.png?alt=media&token=c14dcec5-8af2-459f-8443-c7c3ac8b79d2"
+    //                 style="
+    //                   display: block;
+    //                   height: auto;
+    //                   border: 0;
+    //                 "
+    //                 title="facebook"
+    //                 width="32"
+    //             /></a>` +
+    //             "<h6>" +
+    //             "Visit Us At : www.Infinity.AI.org  " +
+    //             "</h6>",
+    //         };
+    //         transport.sendMail(mailOptions, async function (err, info) {
+    //           if (err) {
+    //             return badRequestResponse(res, {
+    //               message: `Email not send error something is wrong ${err}`,
+    //             });
+    //           } else {
+    //             return successResponse(res, {
+    //               message: "otp has been send to your email address..!!",
+    //             });
+    //           }
+    //         });
+    //       } else {
+    //         return successResponse(res, {
+    //           message: "otp already and in your mail plase check your email",
+    //         });
+    //       }
+    //     }
+    //   } else {
+    //     return badRequestResponse(res, {
+    //       message: "Withdrawals halted temporarily for software update",
+    //     });
+    //   }
+    // } catch (error) {
+    //   return errorResponse(error, res);
+    // }
   },
   tranferotpsend: async (req, res) => {
     try {

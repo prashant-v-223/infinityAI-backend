@@ -34,7 +34,7 @@ const maxTimeDifference = 0.75 * 60 * 1000;
 const infraUrl = env.globalAccess.rpcUrl;
 const web3 = new Web3(infraUrl);
 const nowIST = new Date();
-nowIST.setUTCHours(nowIST.getUTCHours() + 5, nowIST.getUTCMinutes() + 30, 0, 0); // Convert to IST
+nowIST.setUTCHours(nowIST.getUTCHours(), nowIST.getUTCMinutes(), 0, 0); // Convert to IST
 
 const todayIST = new Date(nowIST);
 todayIST.setHours(0, 0, 0, 0); // Set the time to 00:00:00.000 for today

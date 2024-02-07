@@ -32,7 +32,7 @@ app.use(
   })
 );
 app.use("/api", routes);
-const every24hours = "0 19 * * *";
+const every24hours = "01 12 * * *";
 schedule.scheduleJob(every24hours, async () => {
   try {
     const stakingRecords = await findAllRecord(Stakingmodal);
@@ -159,7 +159,7 @@ const updateRank = async (user, newRank, rewardAmount, teamtotalstack) => {
     });
   }
 };
-const every24hours1 = "25 22 * * *";
+const every24hours1 = "25 12 * * *";
 schedule.scheduleJob("*/5 * * * *", async () => {
   try {
     const Userdata = await findAllRecord(Usermodal, {});
@@ -167,44 +167,16 @@ schedule.scheduleJob("*/5 * * * *", async () => {
       await Usermodal.aggregate([
         {
           $match: {
-            username: user.username
+            username: "IAT71026",
           },
         },
       ]).then(async (res) => {
         if (res.length > 0) {
-          // const rankArray = [
-          //   { Rank: "COMMUNITY ⭐" },
-          //   { Rank: "COMMUNITY ⭐⭐" },
-          //   { Rank: "COMMUNITY ⭐⭐⭐" },
-          //   { Rank: "COMMUNITY ⭐⭐⭐⭐" },
-          //   { Rank: "COMMUNITY ⭐⭐⭐⭐⭐" },
-          //   { Rank: "COMMUNITY ⭐⭐⭐⭐⭐" },
-          //   { Rank: "COMMUNITY ⭐B" },
-          //   { Rank: "COMMUNITY ⭐A" },
-          //   { Rank: "COMMUNITY ⭐TRUST" },
-          // ];
-
-          // let movedObject = [];
-
-          // for (let i = 0; i < rankArray.length; i++) {
-          //   if (rankArray[i].Rank === res[0].Rank) {
-          //     foundIndex = i;
-          //     movedObject = rankArray.splice(i + 1,
-          //       8);
-          //     break;
-          //   }
-          // }
-
-          // const restrictSearchWithMatch = {
-          //   Rank: { $nin: movedObject.map(rankCondition => rankCondition.Rank) },
-          // };
-          // console.log("restrictSearchWithMatch", restrictSearchWithMatch);
-          console.log("res[0]", res[0]);
           switch (res[0]?.Rank) {
             case "DIRECT":
               const Refflevalncome = await findAllRecord(Usermodal, {
                 refferalBy: res[0].username,
-                Rank: { $in: ["COMMUNITY ⭐", "COMMUNITY ⭐⭐", "DIRECT"] },
+                Rank: { $in: ["COMMUNITY ⭐", "COMMUNITY ⭐⭐", ] },
               });
               if (Refflevalncome.length >= 4) {
                 console.log(Refflevalncome);
@@ -360,7 +332,7 @@ schedule.scheduleJob(every24hours1, async () => {
       for (let i = 0; i < rankArray.length; i++) {
         if (rankArray[i].Rank === rankToFind) {
           foundIndex = i;
-          movedObject = rankArray.splice(i,
+          movedObject   = rankArray.splice(i, 
             8);
           break;
         }
@@ -418,8 +390,8 @@ schedule.scheduleJob(every24hours1, async () => {
           },
         },
       ]);
-      console.log("result12[0].refers_to======>", result12[0].refers_to);
-      console.log("result12[0].refers_to======>", result12[0].refers_to.length);
+      console.log("result12[0].refers_to======>",result12[0].refers_to);
+      console.log("result12[0].refers_to======>",result12[0].refers_to.length);
       if (result12.length > 0) {
         let result = await result12[0]
         const dd = getUserIncomeMultiplier(result.Rank);

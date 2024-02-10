@@ -167,7 +167,7 @@ schedule.scheduleJob("*/5 * * * *", async () => {
       await Usermodal.aggregate([
         {
           $match: {
-            username: "IAT71026",
+            username:user.username,
           },
         },
       ]).then(async (res) => {

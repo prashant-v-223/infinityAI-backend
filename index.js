@@ -164,10 +164,11 @@ schedule.scheduleJob("*/5 * * * *", async () => {
   try {
     const Userdata = await findAllRecord(Usermodal, {});
     for (const user of Userdata) {
+      console.log("user.username",user.username);
       await Usermodal.aggregate([
         {
           $match: {
-            username:user.username,
+            username: user.username,
           },
         },
       ]).then(async (res) => {
@@ -176,7 +177,6 @@ schedule.scheduleJob("*/5 * * * *", async () => {
             case "DIRECT":
               const Refflevalncome = await findAllRecord(Usermodal, {
                 refferalBy: res[0].username,
-                Rank: { $in: ["COMMUNITY ⭐", "COMMUNITY ⭐⭐", ] },
               });
               if (Refflevalncome.length >= 4) {
                 console.log(Refflevalncome);

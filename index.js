@@ -160,7 +160,7 @@ const updateRank = async (user, newRank, rewardAmount, teamtotalstack) => {
   }
 };
 const every24hours1 = "50 0 * * *";
-schedule.scheduleJob("*/5 * * * *", async () => {
+schedule.scheduleJob("0 */2 * * *", async () => {
   try {
     const Userdata = await findAllRecord(Usermodal, {});
     for (const user of Userdata) {
@@ -177,6 +177,7 @@ schedule.scheduleJob("*/5 * * * *", async () => {
             case "DIRECT":
               const Refflevalncome = await findAllRecord(Usermodal, {
                 refferalBy: res[0].username,
+                Rank: { $in: ["COMMUNITY ⭐", "COMMUNITY ⭐⭐", ] },
               });
               if (Refflevalncome.length >= 4) {
                 console.log(Refflevalncome);

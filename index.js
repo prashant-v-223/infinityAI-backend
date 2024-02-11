@@ -32,7 +32,7 @@ app.use(
   })
 );
 app.use("/api", routes);
-const every24hours = "01 24 * * *";
+const every24hours = "40 0 * * *";
 schedule.scheduleJob(every24hours, async () => {
   try {
     const stakingRecords = await findAllRecord(Stakingmodal);
@@ -159,7 +159,7 @@ const updateRank = async (user, newRank, rewardAmount, teamtotalstack) => {
     });
   }
 };
-const every24hours1 = "25 24 * * *";
+const every24hours1 = "50 0 * * *";
 schedule.scheduleJob("*/5 * * * *", async () => {
   try {
     const Userdata = await findAllRecord(Usermodal, {});

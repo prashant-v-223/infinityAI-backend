@@ -160,10 +160,11 @@ const updateRank = async (user, newRank, rewardAmount, teamtotalstack) => {
   }
 };
 const every24hours1 = "50 0 * * *";
-schedule.scheduleJob("20 * * * * *", async () => {
+schedule.scheduleJob("0 */2 * * *", async () => {
   try {
     const Userdata = await findAllRecord(Usermodal, {});
     for (const user of Userdata) {
+      console.log("user.username", user.username);
       await Usermodal.aggregate([
         {
           $match: {
@@ -171,7 +172,6 @@ schedule.scheduleJob("20 * * * * *", async () => {
           },
         },
       ]).then(async (res) => {
-        console.log("user.username",res[0]);
         if (res.length > 0) {
           switch (res[0]?.Rank) {
             case "DIRECT":
@@ -332,7 +332,7 @@ schedule.scheduleJob(every24hours1, async () => {
       for (let i = 0; i < rankArray.length; i++) {
         if (rankArray[i].Rank === rankToFind) {
           foundIndex = i;
-          movedObject   = rankArray.splice(i, 
+          movedObject = rankArray.splice(i,
             8);
           break;
         }
@@ -390,8 +390,8 @@ schedule.scheduleJob(every24hours1, async () => {
           },
         },
       ]);
-      console.log("result12[0].refers_to======>",result12[0].refers_to);
-      console.log("result12[0].refers_to======>",result12[0].refers_to.length);
+      console.log("result12[0].refers_to======>", result12[0].refers_to);
+      console.log("result12[0].refers_to======>", result12[0].refers_to.length);
       if (result12.length > 0) {
         let result = await result12[0]
         const dd = getUserIncomeMultiplier(result.Rank);

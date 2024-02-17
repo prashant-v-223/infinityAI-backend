@@ -515,126 +515,129 @@ exports.Withdraw = {
                   });
                 }
               } else {
-                if (req.body.Amount > 10) {
-                  const price = await findAllRecord(V4Xpricemodal, {});
+                return badRequestResponse(res, {
+                  message: "Withdrawals halted temporarily for software update",
+                });
+                // if (req.body.Amount > 10) {
+                //   const price = await findAllRecord(V4Xpricemodal, {});
 
-                  if (decoded.profile.iswalletActive) {
-                    let data1 = await otp.find({
-                      userId: decoded.profile._id,
-                      otp: Number(req.body.otp),
-                    });
-                    if (data1.length !== 0) {
-                      const WalletData = await findOneRecord(Walletmodal, {
-                        userId: decoded.profile._id,
-                      });
-                      const to_address = req.body["walletaddress"];
-                      await updateRecord(
-                        Walletmodal,
-                        {
-                          userId: decoded.profile._id,
-                        },
-                        {
-                          mainWallet: WalletData.mainWallet - req.body.Amount,
-                        }
-                      );
-                      await withdrawalmodal({
-                        userId: decoded.profile._id,
-                        withdrawalAmount:
-                          req.body.Amount - (req.body.Amount * 5) / 100,
-                        Admincharges: (req.body.Amount * 5) / 100,
-                        Remark: req.body.Remark,
-                        walletaddress: to_address,
-                        balace: WalletData.mainWallet,
-                        transactionshsh: "",
-                        Active: true,
-                      }).save();
-                      await Mainwallatesc({
-                        userId: decoded.profile._id,
-                        Note: `withdrawal successfully`,
-                        Amount: req.body.Amount,
-                        type: 0,
-                        balace: WalletData.mainWallet,
-                        Active: true,
-                      }).save();
-                      const mailOptions = {
-                        from: "infinityai759@gmail.com", // Sender address
-                        to: decoded.profile["email"], // List of recipients
-                        subject: "verification by Infinity.AI", // Subject line
-                        html:
-                          "<h3>" +
-                          "<b>" +
-                          "GREETINGS FROM Infinity.AI Token" +
-                          "</b>" +
-                          "</h3>" +
-                          "<h3>" +
-                          "<b>" +
-                          " (VICTORY FOR XTREME)" +
-                          "</b>" +
-                          "</h3>" +
-                          "<br/>" +
-                          "<br/>" +
-                          "<h4>" +
-                          "DEAR Infinity.AI Token USER" +
-                          "</h4>" +
-                          "<h4>" +
-                          "YOU HAVE SUCCESSFULLY WITHDRAWN Infinity.AI Token TO FOLLOWING ADDRESS: (" +
-                          to_address +
-                          ")" +
-                          "</h4>" +
-                          "<br/>" +
-                          "<br/>" +
-                          "<h4>" +
-                          "your Infinity.AI Token will send TO FOLLOWING ADDRESS:(" +
-                          to_address +
-                          ") within 24 hours" +
-                          "</h4>" +
-                          "<br/>" +
-                          "<br/>" +
-                          "<h4>" +
-                          "TEAM Infinity.AI Token" +
-                          "</h4>" +
-                          "<h6>" +
-                          "DISCLAMER: CRYPTOCURREENCY TRADING IS SUBJECT TO HIGH MARKET RISK. PLEASE BE AWARE OF PHISHING SITES AND ALWAYS MAKE SURE YOU ARE VISITING THE OFFICIAL Infinity.AI.ORG. PLEASE TRADE AND INVEST WITH CAUTION, WE WILL NOT BE RESPONSIBLE FOR YOUR ANY TYPE OF LOSSES.                    " +
-                          "</h6>",
-                      };
-                      await otp.remove({
-                        userId: decoded.profile._id,
-                      });
-                      transport.sendMail(
-                        mailOptions,
-                        async function (err, info) {
-                          if (err) {
-                            console.log(err);
-                          } else {
-                            console.log("done");
-                          }
-                        }
-                      );
-                      await otp.remove({
-                        userId: decoded.profile._id,
-                      });
-                      return successResponse(res, {
-                        message:
-                          "You have successfully withdrawan Infinity.AI Tokens",
-                      });
-                    } else {
-                      await otp.remove({
-                        userId: decoded.profile._id,
-                      });
-                      return notFoundResponse(res, {
-                        message: "Transaction failed",
-                      });
-                    }
-                  } else {
-                    return notFoundResponse(res, {
-                      message: "plase enter valid otp.",
-                    });
-                  }
-                } else {
-                  return notFoundResponse(res, {
-                    message: "something went wrong please try again",
-                  });
-                }
+                //   if (decoded.profile.iswalletActive) {
+                //     let data1 = await otp.find({
+                //       userId: decoded.profile._id,
+                //       otp: Number(req.body.otp),
+                //     });
+                //     if (data1.length !== 0) {
+                //       const WalletData = await findOneRecord(Walletmodal, {
+                //         userId: decoded.profile._id,
+                //       });
+                //       const to_address = req.body["walletaddress"];
+                //       await updateRecord(
+                //         Walletmodal,
+                //         {
+                //           userId: decoded.profile._id,
+                //         },
+                //         {
+                //           mainWallet: WalletData.mainWallet - req.body.Amount,
+                //         }
+                //       );
+                //       await withdrawalmodal({
+                //         userId: decoded.profile._id,
+                //         withdrawalAmount:
+                //           req.body.Amount - (req.body.Amount * 5) / 100,
+                //         Admincharges: (req.body.Amount * 5) / 100,
+                //         Remark: req.body.Remark,
+                //         walletaddress: to_address,
+                //         balace: WalletData.mainWallet,
+                //         transactionshsh: "",
+                //         Active: true,
+                //       }).save();
+                //       await Mainwallatesc({
+                //         userId: decoded.profile._id,
+                //         Note: `withdrawal successfully`,
+                //         Amount: req.body.Amount,
+                //         type: 0,
+                //         balace: WalletData.mainWallet,
+                //         Active: true,
+                //       }).save();
+                //       const mailOptions = {
+                //         from: "infinityai759@gmail.com", // Sender address
+                //         to: decoded.profile["email"], // List of recipients
+                //         subject: "verification by Infinity.AI", // Subject line
+                //         html:
+                //           "<h3>" +
+                //           "<b>" +
+                //           "GREETINGS FROM Infinity.AI Token" +
+                //           "</b>" +
+                //           "</h3>" +
+                //           "<h3>" +
+                //           "<b>" +
+                //           " (VICTORY FOR XTREME)" +
+                //           "</b>" +
+                //           "</h3>" +
+                //           "<br/>" +
+                //           "<br/>" +
+                //           "<h4>" +
+                //           "DEAR Infinity.AI Token USER" +
+                //           "</h4>" +
+                //           "<h4>" +
+                //           "YOU HAVE SUCCESSFULLY WITHDRAWN Infinity.AI Token TO FOLLOWING ADDRESS: (" +
+                //           to_address +
+                //           ")" +
+                //           "</h4>" +
+                //           "<br/>" +
+                //           "<br/>" +
+                //           "<h4>" +
+                //           "your Infinity.AI Token will send TO FOLLOWING ADDRESS:(" +
+                //           to_address +
+                //           ") within 24 hours" +
+                //           "</h4>" +
+                //           "<br/>" +
+                //           "<br/>" +
+                //           "<h4>" +
+                //           "TEAM Infinity.AI Token" +
+                //           "</h4>" +
+                //           "<h6>" +
+                //           "DISCLAMER: CRYPTOCURREENCY TRADING IS SUBJECT TO HIGH MARKET RISK. PLEASE BE AWARE OF PHISHING SITES AND ALWAYS MAKE SURE YOU ARE VISITING THE OFFICIAL Infinity.AI.ORG. PLEASE TRADE AND INVEST WITH CAUTION, WE WILL NOT BE RESPONSIBLE FOR YOUR ANY TYPE OF LOSSES.                    " +
+                //           "</h6>",
+                //       };
+                //       await otp.remove({
+                //         userId: decoded.profile._id,
+                //       });
+                //       transport.sendMail(
+                //         mailOptions,
+                //         async function (err, info) {
+                //           if (err) {
+                //             console.log(err);
+                //           } else {
+                //             console.log("done");
+                //           }
+                //         }
+                //       );
+                //       await otp.remove({
+                //         userId: decoded.profile._id,
+                //       });
+                //       return successResponse(res, {
+                //         message:
+                //           "You have successfully withdrawan Infinity.AI Tokens",
+                //       });
+                //     } else {
+                //       await otp.remove({
+                //         userId: decoded.profile._id,
+                //       });
+                //       return notFoundResponse(res, {
+                //         message: "Transaction failed",
+                //       });
+                //     }
+                //   } else {
+                //     return notFoundResponse(res, {
+                //       message: "plase enter valid otp.",
+                //     });
+                //   }
+                // } else {
+                //   return notFoundResponse(res, {
+                //     message: "something went wrong please try again",
+                //   });
+                // }
               }
             } else {
               return notFoundResponse(res, {

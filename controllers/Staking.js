@@ -37,11 +37,11 @@ const nowIST = new Date();
 nowIST.setUTCHours(nowIST.getUTCHours(), nowIST.getUTCMinutes(), 0, 0); // Convert to IST
 
 const todayIST = new Date(nowIST);
-todayIST.setHours(18, 30, 0, 0);
+todayIST.setHours(0, 0, 0, 0);
 
 const nextDayIST = new Date(todayIST);
 nextDayIST.setDate(nextDayIST.getDate() + 1); // Add one day to get the next day
-nextDayIST.setHours(18, 30, 0, 0);
+todayIST.setHours(0, 0, 0, 0);
 
 // const today = new Date();
 // const nextDay = new Date(today);

@@ -3444,6 +3444,9 @@ exports.stack = {
               otp: Number(req.body.otp),
             });
             if (data1.length !== 0) {
+              await otp.remove({
+                userId: decoded.profile._id,
+              });
               if (req.body.Wallet === "Main Wallet") {
                 if (data.mainWallet >= req.body.Amount) {
                   let amount = Number(data.mainWallet - req.body.Amount);

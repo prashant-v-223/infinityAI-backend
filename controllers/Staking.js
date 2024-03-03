@@ -16,11 +16,13 @@ const {
 } = require("../middleware/response");
 const { tokenverify } = require("../middleware/token");
 const Stakingmodal = require("../models/Staking");
+const Passivesmodal = require("../models/Passive");
 const Walletmodal = require("../models/Wallet");
 const Usermodal = require("../models/user");
 const Stakingbonus = require("../models/Stakingbonus");
 const Transactionmodal = require("../models/Transaction");
 const Communitymodal = require("../models/Community");
+const Achivementsmodal = require("../models/achivements");
 const Achivementmodal = require("../models/Achivement");
 const Passivemodal = require("../models/Passive");
 const V4Xpricemodal = require("../models/V4XLiveRate");
@@ -3338,23 +3340,93 @@ exports.stack = {
       ])
       var todayStackAmount = data1234[0].amount2.filter((a) => {
         const currentDate = new Date();
-        const istOffset = 5.5 * 60 * 60 * 1000; // 5.5 hours in milliseconds
-        const istTime = new Date(currentDate.getTime() + istOffset);
-        const istTimeString = istTime.toDateString("en-IN", { timeZone: "Asia/Kolkata" });
+        const istTime = new Date(currentDate.getTime());
         const currentDate1 = new Date(a.createdAt);
-        const istOffset1 = 5.5 * 60 * 60 * 1000; // 5.5 hours in milliseconds
-        const istTime1 = new Date(currentDate1.getTime() + istOffset1);
-        const istTimeString1 = istTime1.toDateString("en-IN", { timeZone: "Asia/Kolkata" });
-        console.log("Current Date in IST:", istTimeString);
-        console.log("Current Date in IST:", istTimeString1);
-        return istTimeString === istTimeString1;
+        const istTime1 = new Date(currentDate1.getTime());
+        return istTime === istTime1;
       });
       var innerAmountSum = todayStackAmount.reduce((sum, a) => sum + a.Amount, 0);
-
+      const today = new Date();
+      const startOfToday = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+      const endOfToday = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
+      const todayStakingData1 = await Stakingbonus.aggregate([{
+        $match: {
+          createdAt: {
+            $gte: startOfToday,
+            $lt: endOfToday
+          }
+        }
+      }, {
+        $group: {
+          _id: null,
+          totalAmount: { $sum: "$Amount" } // Assuming "amount" is the field you want to sum
+        }
+      }])
+      const todaypassives = await Passivesmodal.aggregate([{
+        $match: {
+          createdAt: {
+            $gte: startOfToday,
+            $lt: endOfToday
+          }
+        }
+      }, {
+        $group: {
+          _id: null,
+          totalAmount: { $sum: "$Amount" } // Assuming "amount" is the field you want to sum
+        }
+      }])
+      const todayCommunitymodal = await Communitymodal.aggregate([{
+        $match: {
+          createdAt: {
+            $gte: startOfToday,
+            $lt: endOfToday
+          }
+        }
+      }, {
+        $group: {
+          _id: null,
+          totalAmount: { $sum: "$Amount" } // Assuming "amount" is the field you want to sum
+        }
+      }])
+      const todayAchivementsmodal = await Achivementsmodal.aggregate([{
+        $match: {
+          createdAt: {
+            $gte: startOfToday,
+            $lt: endOfToday
+          }
+        }
+      }, {
+        $group: {
+          _id: null,
+          totalAmount: { $sum: "$Amount" } // Assuming "amount" is the field you want to sum
+        }
+      }])
+      const todayReff = await Stakingbonus.aggregate([{
+        $match: {
+          createdAt: {
+            $gte: startOfToday,
+            $lt: endOfToday
+          },
+          $or: [
+            { ReffId: { $exists: false } }, // Match documents where ReffId doesn't exist
+            { ReffId: "" } // Match documents where ReffId is an empty string
+          ]
+        }
+      }, {
+        $group: {
+          _id: null,
+          totalAmount: { $sum: "$Amount" } // Assuming "amount" is the field you want to sum
+        }
+      }])
       return successResponse(res, {
         message: "Wallet data retrieved successfully",
         data: WalletData,
         profile: userData,
+        todayStakingData1: todayStakingData1,
+        todaypassives: todaypassives,
+        todayReff: todayReff,
+        todayAchivementsmodal: todayAchivementsmodal,
+        todayCommunitymodal: todayCommunitymodal,
         activedate: stakingData.length > 0 ? stakingData[0]?.createdAt : null,
         lockeddate:
           stakingData.length > 0

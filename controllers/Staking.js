@@ -3401,23 +3401,28 @@ exports.stack = {
           totalAmount: { $sum: "$Amount" } // Assuming "amount" is the field you want to sum
         }
       }])
-      const todayReff = await Stakingbonus.aggregate([{
-        $match: {
-          createdAt: {
-            $gte: startOfToday,
-            $lt: endOfToday
-          },
-          $or: [
-            { ReffId: { $exists: false } }, // Match documents where ReffId doesn't exist
-            { ReffId: "" } // Match documents where ReffId is an empty string
-          ]
+      const todayReff = await Stakingbonus.aggregate([
+        {
+          $match: {
+            createdAt: {
+              $gte: startOfToday,
+              $lt: endOfToday
+            },
+            $expr: {
+              $eq: [
+                { $substrCP: ["$Note", 0, 29] },
+                "You Got Refer and Earn Income"
+              ]
+            }
+          }
+        },
+        {
+          $group: {
+            _id: null,
+            totalAmount: { $sum: "$Amount" } // Assuming "Amount" is the field you want to sum
+          }
         }
-      }, {
-        $group: {
-          _id: null,
-          totalAmount: { $sum: "$Amount" } // Assuming "amount" is the field you want to sum
-        }
-      }])
+      ])
       return successResponse(res, {
         message: "Wallet data retrieved successfully",
         data: WalletData,

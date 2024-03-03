@@ -3347,7 +3347,7 @@ exports.stack = {
       });
       var innerAmountSum = todayStackAmount.reduce((sum, a) => sum + a.Amount, 0);
       const today = new Date();
-      const startOfToday = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+      const startOfToday = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 2);
       const endOfToday = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
       const todayStakingData1 = await Stakingbonus.aggregate([{
         $match: {

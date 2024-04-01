@@ -3340,10 +3340,12 @@ exports.stack = {
       ])
       var todayStackAmount = data1234[0].amount2.filter((a) => {
         const currentDate = new Date();
-        const istTime = new Date(currentDate.getTime());
+        const yesterday = new Date(currentDate);
+        yesterday.setDate(currentDate.getDate() - 1);
+        yesterday.setHours(12, 0, 0, 0);
         const currentDate1 = new Date(a.createdAt);
         const istTime1 = new Date(currentDate1.getTime());
-        return istTime === istTime1;
+        return yesterday === istTime1;
       });
       var innerAmountSum = todayStackAmount.reduce((sum, a) => sum + a.Amount, 0);
       const today = new Date();

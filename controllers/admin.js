@@ -4,7 +4,7 @@ const Usermodal = require("../models/user");
 const wallatemodal = require("../models/Wallet");
 const Transactionmodal = require("../models/Transaction");
 const V4Xpricemodal = require("../models/V4XLiveRate");
-const Adminmodal = require("../models/Admin");
+const Adminmodal = require("../models/user");
 const Walletmodal = require("../models/Wallet");
 const Sopprtmodal = require("../models/Ticket");
 const V4XpriceSchemaDetails = require("../models/TokenDetails");
@@ -36,7 +36,8 @@ exports.admin = {
   signIn: async (req, res) => {
     try {
       req.body = decodeUris(req.body);
-      const user = await findOneRecord(Adminmodal, { email: req.body.email });
+      console.log("req.body", req.body);
+      const user = await findOneRecord(Adminmodal, { username: req.body.email });
       if (!user) {
         return notFoundResponse(res, { message: "User Not Found!" });
       } else {
@@ -47,13 +48,14 @@ exports.admin = {
           badRequestResponse(res, { message: "Password is incorrect!" });
         } else {
           const profile = await Adminmodal.findOne({
-            email: req.body.email,
+            username: req.body.email,
           }).select({
             password: 0,
           });
           const token = jwt.sign({ profile }, "3700 0000 0000 002", {
             expiresIn: "24hr",
           });
+          console.log("req.body", token);
           return successResponse(res, {
             message: "Login successfully",
             token: token,

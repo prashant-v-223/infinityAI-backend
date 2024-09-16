@@ -6,7 +6,7 @@ const register = require('./register')
 
 const staking = require('./staking')
 
-const Withdraw = require('./Withdraw')
+const Withdraw = require('./withdraw12')
 
 const admin = require('./admin')
 

@@ -22,8 +22,7 @@ const Community = new Schema(
       required: true,
     },
     Active: {
-      type: Boolean,
-      default: true,
+      type: String,
       required: true,
     },
   },

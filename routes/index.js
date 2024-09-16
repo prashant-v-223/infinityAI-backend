@@ -10,6 +10,8 @@ const Withdraw = require('./Withdraw')
 
 const admin = require('./admin')
 
+const depositRoutes = require('./depositRoutes')
+
 const user = require('./user')
 
 router.use('/registration', register)
@@ -18,8 +20,9 @@ router.use('/staking', staking)
 
 router.use('/user', user)
 
-router.use('/Withdraw', Withdraw)
+router.use('/depositdata', depositRoutes)
 
 router.use('/admin', admin)
+router.use('/Withdraw', Withdraw)
 
 module.exports = router

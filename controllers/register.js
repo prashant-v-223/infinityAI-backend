@@ -175,7 +175,7 @@ exports.register = {
     signIn: async (req, res) => {
         try {
             req.body = decodeUris(req.body);
-            const user = await findOneRecord(Usermodal, { username: req.body.email });
+            const user = await findOneRecord(Usermodal, { email: req.body.email });
             if (!user) {
                 return notFoundResponse(res, { message: "User Not Found!" });
             } else {
@@ -191,26 +191,21 @@ exports.register = {
                             message: "Account is disabled. please contact support!",
                         });
                     } else {
-                        if (!user.isValid) {
-                            badRequestResponse(res, {
-                                message: "please verify your account",
-                            });
-                        } else {
-                            console.log(user);
-                            const accessToken = await token(Usermodal, user);
 
-                            const Wallet = await findOneRecord(Walletmodal, {
-                                userId: user._id,
-                            });
-                            if (!Wallet) {
-                                await Walletmodal({ userId: user._id }).save();
-                            }
-                            return successResponse(res, {
-                                message: "Login successfully",
-                                token: accessToken.token,
-                                profile: user,
-                            });
+                        console.log(user);
+                        const accessToken = await token(Usermodal, user);
+
+                        const Wallet = await findOneRecord(Walletmodal, {
+                            userId: user._id,
+                        });
+                        if (!Wallet) {
+                            await Walletmodal({ userId: user._id }).save();
                         }
+                        return successResponse(res, {
+                            message: "Login successfully",
+                            token: accessToken.token,
+                            profile: user,
+                        });
                     }
                 }
             }

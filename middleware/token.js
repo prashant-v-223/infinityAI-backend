@@ -1,3 +1,4 @@
+// middleware/token.js
 const jwt = require("jsonwebtoken");
 
 module.exports = {
@@ -10,14 +11,16 @@ module.exports = {
     });
     return { token };
   },
-  tokenverify: async (jwtToken) => {
-    return await jwt.verify(
-      jwtToken,
-      "3700 0000 0000 002",
-      function (err, decoded) {
-        return { err, decoded };
-      }
-    );
+  tokenverify: async (token) => {
+    return new Promise((resolve) => {
+      jwt.verify(token, "3700 0000 0000 002", (err, decoded) => {
+        if (err) {
+          resolve({ err });
+        } else {
+          resolve({ decoded });
+        }
+      });
+    });
   },
   Forgetpasswordtoken: async (allRecords, record) => {
     const profile = await allRecords.findById(record._id);
@@ -27,3 +30,5 @@ module.exports = {
     return { token };
   },
 };
+
+

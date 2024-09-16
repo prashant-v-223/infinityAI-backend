@@ -44,23 +44,9 @@ exports.createDeposit = async (req, res) => {
 
 exports.getDeposit = async (req, res) => {
   try {
-    // Verify the token
-    if (req.headers.authorization) {
-      let { err, decoded } = await tokenverify(req.headers.authorization.split(" ")[1]);
-      if (err) {
-        return errorResponse(err, res);
-      }
-      console.log("decoded", decoded.profile._id);
-
-      // Create a new deposit
-      const deposit = await Deposit.find({
-        userId: decoded.profile._id,
-      });
-
-      return successResponse(res, { message: "Deposit created successfully", deposit });
-    } else {
-      return badRequestResponse(res, { message: "No token provided." });
-    }
+    const deposit = await Deposit.find({
+    });
+    return successResponse(res, { message: "Deposit created successfully", deposit });
   } catch (error) {
     return errorResponse(error, res);
   }

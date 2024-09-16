@@ -23,6 +23,7 @@ router.use('/user', user)
 router.use('/depositdata', depositRoutes)
 
 router.use('/admin', admin)
+
 router.use('/Withdraw', Withdraw)
 
 module.exports = router

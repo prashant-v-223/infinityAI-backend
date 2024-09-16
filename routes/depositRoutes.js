@@ -1,5 +1,6 @@
 // routes/depositRoutes.js
-const express = require('express');
+const express = require("express");
+const router = express.Router();
 const { createDeposit, getDeposit, getDepositall, updateDeposit } = require('../controllers/depositController');
 const depositController = require('../controllers/depositController'); // Ensure this path is correct
 

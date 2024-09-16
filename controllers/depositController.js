@@ -66,6 +66,19 @@ exports.getDeposit = async (req, res) => {
   }
 };
 
+exports.getDepositall = async (req, res) => {
+  try {
+    // Verify the token
+
+    const deposit = await Deposit.find({
+    });
+
+    return successResponse(res, { message: "Deposit created successfully", deposit });
+  } catch (error) {
+    return errorResponse(error, res);
+  }
+};
+
 exports.updateDeposit = async (req, res) => {
   const { id } = req.params; // Assuming the deposit ID is passed as a URL parameter
   const updateData = req.body; // Assuming the data to update is passed in the request body

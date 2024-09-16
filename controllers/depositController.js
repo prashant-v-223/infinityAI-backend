@@ -66,12 +66,31 @@ exports.getDeposit = async (req, res) => {
   }
 };
 
-exports.getDepositall = async (req, res) => {
+exports.updateDeposit = async (req, res) => {
+  const { id } = req.params; // Assuming the deposit ID is passed as a URL parameter
+  const updateData = req.body; // Assuming the data to update is passed in the request body
+
   try {
-    const deposit = await Deposit.find({
+    // Find and update the deposit
+    const updatedDeposit = await Deposit.findByIdAndUpdate({ _id: id }, updateData, { new: true, runValidators: true });
+
+    if (!updatedDeposit) {
+      return res.status(404).json({
+        status: 'error',
+        message: 'Deposit not found'
+      });
+    }
+
+    // Return a success response with the updated deposit
+    return successResponse(res, {
+      message: "Deposit updated successfully",
+      deposit: updatedDeposit
     });
-    return successResponse(res, { message: "Deposit created successfully", deposit });
   } catch (error) {
-    return errorResponse(error, res);
+    // Return an error response with the error message
+    return errorResponse(res, {
+      message: "An error occurred while updating the deposit",
+      error: error.message
+    });
   }
 };
